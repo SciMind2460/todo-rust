@@ -91,7 +91,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     )", ())?;
     match cli.command {
         Some(Commands::Add { item, }) => {
-            add_item(item, &conn);
+            add_item(item, &conn)?;
         }
         Some(Commands::Complete { id }) => {
             conn.execute("UPDATE items SET IS_COMPLETED = 1 WHERE ID = ?", params!(id))?;
@@ -100,7 +100,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             conn.execute("DELETE FROM items WHERE ID = ?", params!(id))?;
         }
         None => {
-            list_items(&conn);
+            list_items(&conn)?;
         }
     }
     Ok(())
