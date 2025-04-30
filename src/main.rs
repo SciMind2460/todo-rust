@@ -19,7 +19,7 @@ enum Commands {
     Remove { id: i32 },
 }
 
-fn add_item(item: String, conn: &Connection) {
+fn add_item(item: String, conn: &Connection) -> Result<(), Box<dyn std::error::Error>> {
     println!("Do you want to add a due date? (y/n)");
     let mut str = String::new();
     std::io::stdin().read_line(&mut str)?;
@@ -34,19 +34,20 @@ fn add_item(item: String, conn: &Connection) {
         let minutes_str = read_line();
         let minutes = minutes_str.trim().parse::<i32>()?;
         let date_time = PrimitiveDateTime::new(OffsetDateTime::now_local()?.date() + Duration::days(days as i64), Time::from_hms(hours as u8, minutes as u8, 0)?);
-        conn.execute("INSERT INTO items (ITEM, DUE_DATE, IS_COMPLETED) VALUES (?, ?, ?)", params![description, date_time, false])?;
+        conn.execute("INSERT INTO items (ITEM, DUE_DATE, IS_COMPLETED) VALUES (?, ?, ?)", params![item, date_time, false])?;
     } else {
-        conn.execute("INSERT INTO items (ITEM, DUE_DATE, IS_COMPLETED) VALUES (?, ?, ?)", params![description, Null, false])?;
+        conn.execute("INSERT INTO items (ITEM, DUE_DATE, IS_COMPLETED) VALUES (?, ?, ?)", params![item, Null, false])?;
     }
+    Ok(())
 }
 
 fn read_line() -> String {
     let mut buf = String::new();
     std::io::stdin().read_line(&mut buf).unwrap();
-    return buf;
+    buf
 }
 
-fn list_items(conn: &Connection) {
+fn list_items(conn: &Connection) -> Result<(), Box<dyn std::error::Error>> {
     let mut stmt = conn.prepare("SELECT * FROM items")?;
     let rows = stmt.query_map((), |rows| Ok((rows.get::<_, i32>(0)?, rows.get::<_, String>(1)?, rows.get::<_, PrimitiveDateTime>(2)?, rows.get::<_, bool>(3)?)))?;
     let mut colored_red_stdout = StandardStream::stdout(ColorChoice::Always);
@@ -76,6 +77,7 @@ fn list_items(conn: &Connection) {
     let close_items = &row_vec.iter().filter(|row| now + Duration::days(3) > row.2 && row.2 > now).map(|row| row.0).collect::<Vec<_>>()[..];
     if overdue_items.len() > 0 { writeln!(colored_red_stdout, "Items {:?} are overdue! Finish them quickly!", overdue_items)?; }
     if close_items.len() > 0 { writeln!(colored_yellow_stdout, "Items {:?} are close to deadline, you should finish them soon!", close_items)?; }
+    Ok(())
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
