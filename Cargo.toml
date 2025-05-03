@@ -2,6 +2,7 @@
 name = "todo"
 version = "0.1.0"
 edition = "2024"
+authors = ["Kurt Heiritz (pseudo) saarthkarkera@gmail.com"]
 description = "A to-do CLI tool written in Rust"
 license = "MIT OR Apache-2.0"
 homepage = "https://github.com/SciMind2460/todo-rust"
