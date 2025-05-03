@@ -2,6 +2,11 @@
 name = "todo"
 version = "0.1.0"
 edition = "2024"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/SciMind2460/todo-rust"
+repository = "https://github.com/SciMind2460/todo-rust"
+keywords = ["cli", "todo"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.36", features = ["derive"] }
