@@ -72,7 +72,7 @@ fn list_items(conn: &Connection) -> Result<(), Box<dyn std::error::Error>> {
         if !is_completed {
             if now < due_date && due_date < now + Duration::days(3) {
                 println!("{0: <10} | {1: <50} | {2: <20} | {3: <10}", id.to_string().yellow(), description.yellow(), due_date.to_string().yellow(), is_completed.to_string().yellow());
-            } else if PrimitiveDateTime::new(OffsetDateTime::now_local()?.date(), OffsetDateTime::now_local()?.time()) > due_date {
+            } else if now > due_date {
                 println!("{0: <10} | {1: <50} | {2: <20} | {3: <10}", id.to_string().red(), description.red(), due_date.to_string().red(), is_completed.to_string().red());
             } else {
                 println!("{0: <10} | {1: <50} | {2: <20} | {3: <10}", id, description, due_date, is_completed);
