@@ -31,17 +31,16 @@ enum Commands {
 
 fn add_item(item: String, conn: &Connection) -> Result<(), Box<dyn std::error::Error>> {
     println!("Do you want to add a due date? (y/n)");
-    let mut str = String::new();
-    std::io::stdin().read_line(&mut str)?;
+    let str = read_line()?;
     if str.chars().nth(0) == Some('y'){
         println!("In how many days do you plan to finish this?");
-        let days_str = read_line();
+        let days_str = read_line()?;
         let days = days_str.trim().parse::<i32>()?;
         println!("At what hour?");
-        let hours_str = read_line();
+        let hours_str = read_line()?;
         let hours = hours_str.trim().parse::<i32>()?;
         println!("At what minute?");
-        let minutes_str = read_line();
+        let minutes_str = read_line()?;
         let minutes = minutes_str.trim().parse::<i32>()?;
         let date_time = PrimitiveDateTime::new(OffsetDateTime::now_local()?.date() + Duration::days(days as i64), Time::from_hms(hours as u8, minutes as u8, 0)?);
         conn.execute("INSERT INTO items (ITEM, DUE_DATE, IS_COMPLETED) VALUES (?, ?, ?)", params![item, date_time, false])?;
@@ -51,10 +50,10 @@ fn add_item(item: String, conn: &Connection) -> Result<(), Box<dyn std::error::E
     Ok(())
 }
 
-fn read_line() -> String {
+fn read_line() -> Result<String, Box<dyn std::error::Error>> {
     let mut buf = String::new();
-    std::io::stdin().read_line(&mut buf).unwrap();
-    buf
+    std::io::stdin().read_line(&mut buf)?;
+    Ok(buf)
 }
 
 fn list_items(conn: &Connection) -> Result<(), Box<dyn std::error::Error>> {
