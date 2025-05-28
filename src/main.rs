@@ -2,7 +2,6 @@ use clap::{Parser, Subcommand};
 use colored::Colorize;
 use rusqlite::{params, Connection};
 use rusqlite::types::Null;
-use std::io::Write;
 use time::{PrimitiveDateTime, OffsetDateTime, Time, Duration};
 
 fn slice_to_string(slice: &[i32]) -> String {
@@ -82,7 +81,7 @@ fn list_items(conn: &Connection) -> Result<(), Box<dyn std::error::Error>> {
     };
     let overdue_items = &row_vec.iter().filter(|row| row.2 < now).map(|row| row.0).collect::<Vec<_>>()[..];
     let close_items = &row_vec.iter().filter(|row| now + Duration::days(3) > row.2 && row.2 > now).map(|row| row.0).collect::<Vec<_>>()[..];
-    if overdue_items.len() > 0 { println!(, "Items {:?} are overdue! Finish them quickly!", overdue_items); }
+    if overdue_items.len() > 0 { println!("{} {:?} {}", "Items".red(), slice_to_string(overdue_items).red(), "are overdue! Finish them quickly!".red()); }
     if close_items.len() > 0 { println!("{} {:?} {}", "Items".yellow(), slice_to_string(close_items).yellow(), "are close to deadline! Finish them quickly!".yellow()); }
     Ok(())
 }
