@@ -13,5 +13,5 @@ categories = ["command-line-utilities"]
 [dependencies]
 clap = { version = "4.5.37", features = ["derive"] }
 colored = "3.0.0"
-rusqlite = { version = "0.35.0", features = ["bundled", "time"] }
+rusqlite = { version = "0.36.0", features = ["bundled", "time"] }
 time = { version = "0.3.41", features = ["parsing", "local-offset"] }
