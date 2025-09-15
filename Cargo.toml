@@ -14,4 +14,4 @@ categories = ["command-line-utilities"]
 clap = { version = "4.5.39", features = ["derive"] }
 colored = "3.0.0"
 rusqlite = { version = "0.37.0", features = ["bundled", "time"] }
-time = { version = "0.3.41", features = ["parsing", "local-offset"] }
+time = { version = "0.3.43", features = ["parsing", "local-offset"] }
